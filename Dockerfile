@@ -10,7 +10,6 @@ COPY . .
 
 RUN go build -o main .
 
-# Stage 2: Runtime
 FROM alpine:latest
 
 WORKDIR /root/
