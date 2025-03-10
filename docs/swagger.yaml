@@ -1,0 +1,351 @@
+basePath: /api/v1
+definitions:
+  dto.JwtToken:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  dto.ManualLoginRequest:
+    properties:
+      password:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - password
+    - phone_number
+    type: object
+  dto.ManualLoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.JwtToken'
+      error:
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+  dto.ManualRegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  dto.ManualRegisterResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.Message'
+      error:
+        example: ""
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+  dto.Message:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.MetaResponse:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total_count:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  dto.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.RefreshTokenResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.JwtToken'
+      error:
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+  dto.SendVericationLinkType:
+    enum:
+    - email
+    - phone
+    type: string
+    x-enum-varnames:
+    - EmailVerification
+    - PhoneVerification
+  dto.SendVerificationLinkRequest:
+    properties:
+      type:
+        $ref: '#/definitions/dto.SendVericationLinkType'
+      value:
+        type: string
+    required:
+    - type
+    - value
+    type: object
+  dto.SendVerificationLinkResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.Message'
+      error:
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+  dto.SocialLoginRequest:
+    properties:
+      code:
+        type: string
+      provider:
+        type: string
+    type: object
+  dto.SocialLoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.JwtToken'
+      error:
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+  dto.UserBasicInfo:
+    properties:
+      email:
+        type: string
+      email_verification_status:
+        type: boolean
+      id:
+        type: integer
+      phone_number:
+        type: string
+      phone_number_verification_status:
+        type: boolean
+      username:
+        type: string
+    type: object
+  dto.UserConfirmRequest:
+    properties:
+      token:
+        type: string
+    type: object
+  dto.UserConfirmResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.Message'
+      error:
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+  dto.UserProfileResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.UserBasicInfo'
+      error:
+        type: string
+      meta:
+        $ref: '#/definitions/dto.MetaResponse'
+    type: object
+host: courses-dev.obound.space
+info:
+  contact:
+    email: support@example.com
+    name: Support
+  description: Dokumentasi API menggunakan Swagger di Golang dengan Gin.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: My API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login dengan nomor wa dan password secara manual
+      parameters:
+      - description: Manual Login Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ManualLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ManualLoginResponse'
+      summary: Manual Login
+      tags:
+      - Auth
+  /auth/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refresh token
+      parameters:
+      - description: Refresh Token Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RefreshTokenResponse'
+      summary: Refresh Token
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register dengan email dan password secara manual
+      parameters:
+      - description: Manual Register Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ManualRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ManualRegisterResponse'
+      summary: Manual Register
+      tags:
+      - Auth
+  /auth/social:
+    post:
+      consumes:
+      - application/json
+      description: Register atau login dengan Google atau GitHub
+      parameters:
+      - description: Social Login Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SocialLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SocialLoginResponse'
+      summary: Social Login
+      tags:
+      - Auth
+  /auth/verification/send:
+    post:
+      consumes:
+      - application/json
+      description: Kirim link verifikasi ke email
+      parameters:
+      - description: User Profile Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SendVerificationLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SendVerificationLinkResponse'
+      summary: Send Verification Link
+      tags:
+      - Auth
+  /ping:
+    get:
+      description: API untuk mengecek apakah server berjalan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ping API
+      tags:
+      - Health Check
+  /user/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm
+      parameters:
+      - description: User Confirm Request
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserConfirmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserConfirmResponse'
+      summary: Confirm
+      tags:
+      - User
+  /user/profile:
+    get:
+      consumes:
+      - application/json
+      description: Get User Profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserProfileResponse'
+      security:
+      - BearerAuth: []
+      summary: Get User Profile
+      tags:
+      - User
+schemes:
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

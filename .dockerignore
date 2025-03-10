@@ -1,0 +1,23 @@
+# Ignore binaries
+main
+*.exe
+*.out
+*.o
+
+# Ignore Go build cache
+/go
+/bin
+/pkg
+
+# Ignore config and environment files
+.env
+config.yaml
+
+# Ignore Git and editor files
+.git
+.gitignore
+*.swp
+*.swo
+.idea/
+.vscode/
+node_modules/
