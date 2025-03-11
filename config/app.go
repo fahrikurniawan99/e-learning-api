@@ -23,9 +23,12 @@ type Config struct {
 var Env *Config
 
 func LoadEnv() {
-	// Load .env jika ada
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, using system environment variables")
+
+	if getEnv("APP_ENV", "") != "" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Println("No .env file found, using system environment variables")
+		}
 	}
 
 	Env = &Config{
