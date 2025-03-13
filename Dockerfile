@@ -1,23 +1,17 @@
-# Stage 1: Build
-FROM golang:1.23.1-alpine AS builder
-
-WORKDIR /app
-
-COPY go.mod go.sum ./
-RUN go mod download
-
-COPY . .
-
-RUN go build -o main .
-
+# Stage 2: Run stage (menggunakan image yang lebih ringan)
 FROM alpine:latest
 
-WORKDIR /root/
+# Install dependencies (jika perlu)
+RUN apk --no-cache add ca-certificates
 
-COPY --from=builder /app/main .
+# Set working directory
+WORKDIR /app
 
-RUN chmod +x /root/main  # Pastikan file bisa dieksekusi
+# Copy binary dari stage builder
+COPY . .
 
+# Expose port (ganti sesuai dengan port aplikasi Go)
 EXPOSE 8080
 
+# Jalankan aplikasi
 CMD ["./main"]
