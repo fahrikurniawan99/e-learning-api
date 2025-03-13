@@ -1,32 +1,30 @@
-# Stage 1: Build stage (menggunakan image Golang)
-FROM golang:1.23 AS builder
+# Stage 1: Build stage
+FROM golang:1.21 AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy go.mod dan go.sum lalu download dependency
+# Copy go.mod dan go.sum
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy semua source code
+# Copy source code
 COPY . .
 
-# Build aplikasi
-RUN go build -o main .
+# Build binary statically linked
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 
-# Stage 2: Run stage (menggunakan image yang lebih ringan)
+# Stage 2: Run stage
 FROM alpine:latest
 
-# Install dependencies (jika perlu)
-RUN apk --no-cache add ca-certificates
-
-# Set working directory
 WORKDIR /root/
+
+# Install dependencies
+RUN apk --no-cache add ca-certificates
 
 # Copy binary dari stage builder
 COPY --from=builder /app/main .
 
-# Expose port (ganti sesuai dengan port aplikasi Go)
+# Expose port
 EXPOSE 8080
 
 # Jalankan aplikasi
