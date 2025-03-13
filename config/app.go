@@ -24,11 +24,8 @@ var Env *Config
 
 func LoadEnv() {
 
-	if getEnv("APP_ENV", "") != "" {
-		err := godotenv.Load()
-		if err != nil {
-			log.Println("No .env file found, using system environment variables")
-		}
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
 	}
 
 	Env = &Config{
