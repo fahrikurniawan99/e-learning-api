@@ -5,7 +5,7 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
 # Set working directory
-WORKDIR /app
+WORKDIR /root/
 
 # Copy binary dari stage builder
 COPY . .
