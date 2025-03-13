@@ -1,5 +1,5 @@
 # Stage 1: Build stage (menggunakan image Golang)
-FROM golang:1.21 AS builder
+FROM golang:1.23 AS builder
 
 # Set working directory
 WORKDIR /app
