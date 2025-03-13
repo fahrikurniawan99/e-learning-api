@@ -1,10 +1,12 @@
 # Stage 1: Build stage
-FROM golang:1.21 AS builder
+FROM golang:1.23.1 AS builder
 
 WORKDIR /app
 
 # Copy go.mod dan go.sum
 COPY go.mod go.sum ./
+
+# Download dependencies
 RUN go mod download
 
 # Copy source code
