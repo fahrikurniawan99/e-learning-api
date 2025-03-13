@@ -8,7 +8,8 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 # Copy binary dari stage builder
-COPY . .
+COPY --from=builder /app/main .
+COPY .env .
 
 # Expose port (ganti sesuai dengan port aplikasi Go)
 EXPOSE 8080
